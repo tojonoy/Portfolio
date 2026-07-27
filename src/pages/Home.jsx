@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { GraduationCap, Layers, Building2 } from 'lucide-react'
 import projects from '../data/projects.json'
 import Chips from '../components/Chips.jsx'
 import SectionHead from '../components/SectionHead.jsx'
@@ -11,10 +12,9 @@ const HERO_STATS = [
   { v: '4', k: 'Products shipped at work' },
 ]
 const HERO_META = [
-  { k: 'Now', v: 'Corestrat' },
-  { k: 'Based', v: 'Bengaluru, IN' },
-  { k: 'Depth', v: 'Python · FastAPI · RAG' },
-  { k: 'Since', v: 'Feb 2025' },
+  { i: GraduationCap, k: 'Studied', v: 'BTech CS — Honors in AI/ML', s: 'CGPA 9.46' },
+  { i: Layers, k: 'Domains', v: 'Backend · GenAI · ML', s: 'Blockchain · automation' },
+  { i: Building2, k: 'Now', v: 'Corestrat', s: 'Bengaluru, IN' },
 ]
 const TICKER = ['Python','FastAPI','PostgreSQL','Redis','Celery','Azure','AWS','RAG','LangChain','Neo4j','Pinecone','C# .NET','React','Next.js','Docker','Go','Solidity']
 const HI = new Set(['FastAPI','Celery','RAG','C# .NET','Solidity'])
@@ -49,8 +49,15 @@ export default function Home() {
         </p>
 
         <div className="hmeta">
-          {HERO_META.map(m => (
-            <div key={m.k}><div className="k">{m.k}</div><div className="v">{m.v}</div></div>
+          {HERO_META.map(({ i: Icon, ...m }) => (
+            <div key={m.k}>
+              <div className="k">
+                <Icon size={12} strokeWidth={1.75} aria-hidden="true" />
+                {m.k}
+              </div>
+              <div className="v">{m.v}</div>
+              <div className="s">{m.s}</div>
+            </div>
           ))}
         </div>
 
@@ -79,7 +86,7 @@ export default function Home() {
       </section>
 
       <section className="wrap" id="work">
-        <SectionHead title="Work at Corestrat" note="Feb 2025 → now · open a project for the full case study" />
+        <SectionHead title="Work at Corestrat" note="Feb 2025 → now" />
         {work.map(p => (
           <Link className="row rv" key={p.slug} to={`/work/${p.slug}`}>
             <span className="num">{p.num}</span>
@@ -97,7 +104,7 @@ export default function Home() {
       </section>
 
       <section className="wrap" id="side">
-        <SectionHead title="Built on my own" note="Design, frontend, backend and deploy — all mine" />
+        <SectionHead title="Built on my own" note="Personal projects" />
         <div className="sg rv">
           {side.map(p => (
             <Link key={p.slug} to={`/work/${p.slug}`}>
@@ -114,7 +121,7 @@ export default function Home() {
       </section>
 
       <section className="wrap" id="stack">
-        <SectionHead title="Stack & background" note="Shipped to production or to real users" />
+        <SectionHead title="Stack & background" note="In production" />
         <div className="st rv">
           {STACK.map(([label, items]) => (
             <div className="r2" key={label}>
