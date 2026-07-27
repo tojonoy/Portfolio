@@ -118,7 +118,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="tick" aria-hidden="true">
+        {/* <div className="tick" aria-hidden="true">
           <div className="tick-in">
             {[0, 1].map(loop =>
               TICKER.map(t => (
@@ -126,7 +126,7 @@ export default function Home() {
               ))
             )}
           </div>
-        </div>
+        </div> */}
       </section>
 
       <Section id="work" icon={Briefcase} title="Work at Corestrat" note="Feb 2025 → now">
