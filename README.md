@@ -104,27 +104,40 @@ Change `--accent` and the whole site follows.
 
 Same flow — `netlify.toml` sets the build command, publish directory and redirect.
 
-### GitHub Pages
+### GitHub Pages — this is the configured target
 
-A workflow is included at `.github/workflows/deploy.yml`.
+`.github/workflows/deploy.yml` deploys on every push to `main`. It is set up for
+a **project site**: `github.com/tojonoy/portfolio` → `tojonoy.github.io/portfolio/`.
 
 1. Push to `main`.
-2. Repo **Settings → Pages → Source: GitHub Actions**.
+2. Repo **Settings → Pages → Source: GitHub Actions**. The workflow also passes
+   `enablement: true`, so it will try to turn Pages on by itself.
 3. Done — it builds and deploys on every push.
 
-**If this is a project site** (`github.com/tojonoy/portfolio` → `tojonoy.github.io/portfolio/`)
-you must set the base path, or assets 404. Uncomment the `env` block in the workflow:
+The base path is already set on the build step:
 
 ```yaml
-      env:
-        BASE: /portfolio/
       - run: npm run build
+        env:
+          BASE: /portfolio/
 ```
 
-**If this is a user site** (repo named `tojonoy.github.io`) leave it as-is — base is `/`.
+The `env` block must be **indented under** the step it belongs to. Placing it
+above `- run: npm run build` attaches it to the previous step and silently does
+nothing — the build then emits root-absolute asset paths and every asset 404s.
+
+`BASE` also feeds `BrowserRouter`'s `basename` in `src/main.jsx`, so routing
+depends on it too, not just assets.
+
+**If this ever becomes a user site** (repo renamed to `tojonoy.github.io`),
+delete the `env` block — base falls back to `/`.
 
 `npm run build` also writes `dist/404.html`, which is how GitHub Pages serves
 client-side routes.
+
+> Testing a project-site build locally on Windows: use PowerShell
+> (`$env:BASE = '/portfolio/'; npm run build`). In Git Bash, MSYS path
+> conversion rewrites `/portfolio/` into a Windows path and the output is wrong.
 
 ---
 

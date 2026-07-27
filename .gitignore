@@ -3,3 +3,9 @@ dist
 .DS_Store
 *.local
 .vscode
+
+# Private working context — personal contact details, positioning decisions.
+# Never publish.
+CLAUDE.md
+CLAUDE.local.md
+.claude/

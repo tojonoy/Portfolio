@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TJ">
+  <style>
+    .badge { fill: #000 }
+    .mark  { stroke: #fff }
+    /* Black on transparent disappears in dark browser tabs, so invert there. */
+    @media (prefers-color-scheme: dark) {
+      .badge { fill: #fff }
+      .mark  { stroke: #000 }
+    }
+  </style>
+  <rect class="badge" x="0" y="80" width="512" height="352" rx="96" />
+  <g class="mark" fill="none" stroke-width="34" stroke-linecap="round">
+    <path d="M168 195H292" />
+    <path d="M230 195V320" />
+    <path d="M346 190v92a40 40 0 0 1-40 40" />
+  </g>
+</svg>
