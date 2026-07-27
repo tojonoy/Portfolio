@@ -24,14 +24,17 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      # PROJECT site: github.com/tojonoy/portfolio -> tojonoy.github.io/portfolio/
-      # BASE must match the repo name or every asset 404s. It also feeds
-      # BrowserRouter's basename in src/main.jsx, so routes depend on it too.
+      # PROJECT site: github.com/tojonoy/Portfolio -> tojonoy.github.io/Portfolio/
+      # BASE must match the repo name EXACTLY, including case. The repo is
+      # "Portfolio" with a capital P; Pages paths are case-sensitive, so
+      # /portfolio/ 404s every asset even though the git remote URL accepts it.
+      # BASE also feeds BrowserRouter's basename in src/main.jsx, so routing
+      # depends on it too, not just assets.
       # If this ever becomes a user site (repo named tojonoy.github.io), drop
       # the env block so base falls back to '/'.
       - run: npm run build
         env:
-          BASE: /portfolio/
+          BASE: /Portfolio/
       # enablement: true lets the workflow turn Pages on itself, instead of
       # failing with "Get Pages site failed ... Not Found".
       - uses: actions/configure-pages@v5

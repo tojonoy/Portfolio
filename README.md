@@ -2,11 +2,11 @@
 
 Hey — you've landed on the code behind my portfolio. Feel free to poke around.
 
-I'm Thomas, a software engineer in Bengaluru. The site is where I write up the
+I'm Thomas, a software engineer in Bengaluru.Centre of my logics where I write up the
 things I've built: backend systems, GenAI stuff, some ML and blockchain, and
 the frontends for my own projects.
 
-**[Have a look at the actual site →](#)**
+**[Have a look at the actual site →](https://tojonoy.github.io/Portfolio/)**
 
 ## Where things are
 
