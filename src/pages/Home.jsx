@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import {
   GraduationCap, Layers, Building2,
   Briefcase, Boxes, Terminal,
-  CodeXml, Server, BrainCircuit, MonitorSmartphone, Blocks, Database, BadgeCheck,
-  ChartColumn, Cloud,
+  CodeXml, Server, BrainCircuit, MonitorSmartphone, Blocks, Database,
+  Cloud,
   ArrowRight, Mail, ExternalLink,
 } from 'lucide-react'
 import projects from '../data/projects.json'
@@ -11,6 +11,15 @@ import portrait from '../assets/thomas.jpg'
 import Chips from '../components/Chips.jsx'
 import Section from '../components/Section.jsx'
 import useReveal from '../hooks/useReveal.js'
+import useTypewriter from '../hooks/useTypewriter.js'
+
+// [ink part, muted part] — typed as one string, then split back across the two
+// spans so the h1 keeps its two-tone treatment while animating.
+const PHRASES = [
+  ['I build ', 'production software'],
+  ['I love to ', 'engineer'],
+]
+const PHRASE_TEXT = PHRASES.map(([a, b]) => a + b)
 
 // Generic and meaningful: outcomes that describe the engineer, not one project.
 // Project-specific volumes (equities, price rows, endpoint counts per product)
@@ -37,8 +46,7 @@ const STACK = [
   ['Languages', CodeXml, ['Python','C#','Go','TypeScript','JavaScript','SQL','Solidity','C']],
   ['Backend', Server, ['FastAPI','Flask','ASP.NET','SQLAlchemy','Pydantic','Celery']],
   ['AI & ML', BrainCircuit, ['LangChain','OpenAI','Llama 3','scikit-learn','TensorFlow']],
-  ['Data & analysis', ChartColumn, ['pandas','NumPy','SciPy','Parquet']],
-  ['Databases', Database, ['PostgreSQL','MySQL','Azure SQL','Supabase','PostGIS','Redis','Pinecone','ChromaDB','Neo4j']],
+  ['Databases', Database, ['PostgreSQL','MySQL','Azure SQL','Supabase','Redis','Pinecone','Neo4j']],
   ['Frontend', MonitorSmartphone, ['React','Next.js','Streamlit']],
   ['Blockchain', Blocks, ['Ethereum','Truffle']],
   ['Cloud & infra', Cloud, ['Azure','AWS','Docker','Azure DevOps','Linux']],
@@ -49,16 +57,28 @@ export default function Home() {
   const side = projects.filter(p => p.group === 'side')
   useReveal([])
 
+  const { index, count, done, animating } = useTypewriter(PHRASE_TEXT)
+  const [pre, accent] = PHRASES[index]
+  const shownPre = pre.slice(0, count)
+  const shownAccent = count > pre.length ? accent.slice(0, count - pre.length) : ''
+
   return (
     <main id="top">
       <section className="wrap hero" style={{ paddingBottom: 0 }}>
         <div className="htop">
           <div>
-            <span className="avail">
+            {/* <span className="avail">
               <i className="dot"></i>
               <span className="kicker">Available for software, backend &amp; AI roles</span>
-            </span>
-            <h1>I build <em>production software</em>.</h1>
+            </span> */}
+            <h1>
+              {/* Screen readers get the whole sentence once, not each keystroke. */}
+              <span className="sr-only">I build production software.</span>
+              <span aria-hidden="true">
+                {shownPre}<em>{shownAccent}</em>{done ? '.' : ''}
+                {animating ? <i className="caret" /> : null}
+              </span>
+            </h1>
             <p className="lede">
               Backends and data pipelines are most of my day, but the work spreads out from there —{' '}
               <b>GenAI and agentic systems, ML models, workflow automation, blockchain</b>, and the
@@ -158,10 +178,6 @@ export default function Home() {
                 Rajagiri School of Engineering &amp; Technology · 2021–2025 · CGPA 9.46 · VP, CSI Student Branch
               </div>
             </div>
-          </div>
-          <div className="r2">
-            <div className="rl"><BadgeCheck size={13} strokeWidth={1.7} aria-hidden="true" />Certificates</div>
-            <Chips items={['Deep Learning — IIT Ropar (NPTEL Elite)','Foundational C# — Microsoft','SQL — HackerRank','Intro to ML — NPTEL']} />
           </div>
         </div>
       </Section>
