@@ -25,7 +25,6 @@ export default function Footer() {
         </div>
         <div className="colo">
           <span>Thomas John · Bengaluru, India</span>
-          <span>Instrument Serif &amp; IBM Plex Mono</span>
         </div>
       </div>
     </footer>

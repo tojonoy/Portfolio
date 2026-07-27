@@ -1,5 +1,6 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { ChartColumn, User, Layers, ArrowLeft } from 'lucide-react'
 import projects from '../data/projects.json'
 import Chips from '../components/Chips.jsx'
 
@@ -26,7 +27,7 @@ export default function Project() {
   return (
     <main>
       <div className="wrap back">
-        <Link to={anchor}>← {backLabel}</Link>
+        <Link to={anchor}><ArrowLeft size={13} strokeWidth={1.8} aria-hidden="true" />{backLabel}</Link>
       </div>
 
       <section className="wrap phero" style={{ paddingBottom: 0 }}>
@@ -49,7 +50,7 @@ export default function Project() {
         <div className="cs">
           <article className="doc" dangerouslySetInnerHTML={{ __html: p.doc }} />
           <aside className="side">
-            <h4>Numbers</h4>
+            <h4><ChartColumn size={12} strokeWidth={1.7} aria-hidden="true" />Numbers</h4>
             <div className="mm">
               {p.metrics.map(m => (
                 <div key={m.k}>
@@ -58,9 +59,9 @@ export default function Project() {
                 </div>
               ))}
             </div>
-            <h4>My role</h4>
+            <h4><User size={12} strokeWidth={1.7} aria-hidden="true" />My role</h4>
             <p>{p.role}</p>
-            <h4>Stack</h4>
+            <h4><Layers size={12} strokeWidth={1.7} aria-hidden="true" />Stack</h4>
             <Chips items={p.stack} />
             {(p.links.length > 0 || p.note) && (
               <div className="lnks">

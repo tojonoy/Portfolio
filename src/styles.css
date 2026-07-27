@@ -14,7 +14,10 @@ html[data-theme="dark"]{
 html,body{transition:background-color .35s,color .35s}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;background:var(--paper)}
-body{background:var(--paper);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* Inter, webfont-loaded, so it renders identically everywhere — unlike the
+   -apple-system stack, which only resolves to SF Pro on Apple hardware. The
+   system stack stays as the fallback while the webfont loads. */
+body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Roboto,sans-serif;font-size:16px;line-height:1.55;letter-spacing:-.008em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--ink);color:var(--paper)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -41,12 +44,26 @@ nav.top a.nl:hover{color:var(--ink);background:var(--paper-2)}
 .avail{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);padding:5px 11px;margin-bottom:22px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:blink 2.6s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
-.btn{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;border:1px solid var(--ink);transition:background .2s,color .2s}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px 18px;border:1px solid var(--ink);transition:background .2s,color .2s}
+.btn svg{flex:none;opacity:.75}
+.btn:hover svg{opacity:1}
 .btn:hover{background:var(--ink);color:var(--paper)}
 .btn.solid{background:var(--ink);color:var(--paper)}
 .btn.solid:hover{background:var(--accent);border-color:var(--accent)}
-section{padding:clamp(40px,5vw,68px) 0}
-.sh{display:flex;align-items:baseline;justify-content:space-between;gap:24px;border-bottom:1px solid var(--ink);padding-bottom:10px}
+/* Must be `section.wrap`, not `section`: .wrap is a class selector and would
+   otherwise win and zero these out via its `padding` shorthand. padding-block
+   keeps .wrap's horizontal gutter intact. */
+section.wrap{padding-block:clamp(34px,4.5vw,50px)}
+.sh{display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:1px solid var(--ink);padding-bottom:10px}
+.sh-t{display:flex;align-items:center;gap:11px;min-width:0}
+.sh-t>svg{flex:none;color:var(--accent)}
+.sh-r{display:flex;align-items:center;gap:14px}
+details.sec>summary{cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary:hover h2{color:var(--accent)}
+.chev{flex:none;color:var(--muted);transition:transform .25s cubic-bezier(.22,1,.36,1),color .2s}
+details.sec[open]>summary .chev{transform:rotate(180deg)}
+details.sec>summary:hover .chev{color:var(--accent)}
 .sh h2{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(24px,3vw,34px);letter-spacing:-.015em;line-height:1}
 .sh p{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap}
 @media(max-width:640px){.sh{flex-direction:column;align-items:flex-start;gap:6px}.sh p{text-align:left;white-space:normal}}
@@ -68,7 +85,19 @@ footer h2 em{font-style:italic;color:var(--accent)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important}.rv{opacity:1;transform:none;transition:none}}
 
 /* ---------- index only ---------- */
-.hero{padding:clamp(40px,6vw,74px) 0 0}
+/* section.hero, not .hero — needs to match section.wrap's specificity to win. */
+section.hero{padding-block:clamp(40px,6vw,74px) 0}
+.htop{display:grid;grid-template-columns:1fr 230px;gap:clamp(26px,4vw,58px);align-items:start}
+/* 460px source shown at 230px = exactly 2x, so it stays sharp on retina.
+   The box-shadow is two rings, not a drop shadow — a hairline, a gap in the
+   paper colour, then a fainter hairline. Keeps the flat look. */
+.portrait{width:230px;aspect-ratio:1;border-radius:50%;overflow:hidden;line-height:0;background:var(--paper-2);
+  box-shadow:0 0 0 1px var(--rule-strong),0 0 0 7px var(--paper),0 0 0 8px var(--rule-fine)}
+.portrait img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+@media(max-width:880px){
+  .htop{grid-template-columns:1fr;gap:22px}
+  .portrait{order:-1;width:96px;box-shadow:0 0 0 1px var(--rule-strong),0 0 0 5px var(--paper),0 0 0 6px var(--rule-fine)}
+}
 h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(40px,8.4vw,104px);line-height:.94;letter-spacing:-.02em;max-width:15ch}
 h1 em{font-style:italic;color:var(--accent)}
 .lede{margin-top:22px;max-width:64ch;font-size:clamp(15.5px,1.5vw,18px);color:var(--body)}
@@ -96,14 +125,17 @@ h1 em{font-style:italic;color:var(--accent)}
 @keyframes tickmove{to{transform:translateX(-50%)}}
 .tick:hover .tick-in{animation-play-state:paused}
 
-.row{display:grid;grid-template-columns:38px 1fr auto 30px;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--rule);transition:background .2s,padding-left .2s}
+.row{display:grid;grid-template-columns:38px 1fr auto 30px;gap:18px;align-items:center;padding:24px 0;border-bottom:1px solid var(--rule);transition:background .2s,padding-left .2s}
 .row:hover{background:var(--paper-2);padding-left:8px}
-.row .num{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.1em}
-.row .ttl h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(21px,2.6vw,29px);letter-spacing:-.015em;line-height:1.1;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+/* align-self + a line-height matching the title's first line box sits the number
+   on the product name, instead of floating to the middle of the whole block.
+   Expressed as a clamp so it tracks the title as it scales. */
+.row .num{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:.1em;align-self:start;line-height:clamp(23px,3.1vw,34px)}
+.row .ttl h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(22px,2.9vw,32px);letter-spacing:-.018em;line-height:1.06;display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
 .row:hover .ttl h3{color:var(--accent)}
 .row .live{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:2px 7px}
 .row .int{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border:1px solid var(--rule);padding:2px 7px}
-.row .ttl p{font-size:14.5px;color:var(--body);margin-top:5px;max-width:64ch}
+.row .ttl p{font-size:14.5px;color:var(--body);margin-top:7px;max-width:52ch}
 .row .tags{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);text-align:right;white-space:nowrap}
 @media(max-width:900px){.row{grid-template-columns:30px 1fr 26px;gap:12px}.row .tags{display:none}}
 .arrow{width:26px;height:26px;border:1px solid var(--rule-strong);display:grid;place-items:center;font-size:13px;line-height:1;color:var(--muted);transition:transform .25s,border-color .2s,color .2s,background .2s;justify-self:end}
@@ -116,22 +148,29 @@ h1 em{font-style:italic;color:var(--accent)}
 @media(max-width:820px){.sg > a{border-right:none}.sg > a:nth-last-child(-n+2){border-bottom:1px solid var(--rule)}.sg > a:last-child{border-bottom:none}}
 .sg > a:hover{background:var(--paper-2)}
 .sg .hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-.sg h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:23px;letter-spacing:-.015em;margin-top:7px}
+/* Scales with the viewport like .row h3 did — a fixed 23px made the two lists
+   disagree at larger widths. */
+.sg h3{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(21px,2.4vw,27px);letter-spacing:-.018em;line-height:1.08;margin-top:9px}
 .sg > a:hover h3{color:var(--accent)}
 .sg p{font-size:14px;color:var(--body);margin-top:7px}
 .sg .chips{margin-top:13px}
 .st{border-top:1px solid var(--rule)}
 .st .r2{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:13px 0;border-bottom:1px solid var(--rule-fine)}
 @media(max-width:620px){.st .r2{grid-template-columns:1fr;gap:8px}}
-.st .rl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.st .rl{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.st .rl svg{flex:none;color:var(--accent)}
 
 /* ---------- project page ---------- */
 .back{border-bottom:1px solid var(--rule)}
 .back a{display:inline-flex;align-items:center;gap:9px;padding:14px 0;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);transition:color .2s,gap .2s}
 .back a:hover{color:var(--accent);gap:14px}
-.phero{padding:clamp(30px,4.5vw,54px) 0 0}
-.phero h1{font-size:clamp(36px,7vw,84px);max-width:16ch}
-.phero .tag{margin-left:14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;vertical-align:middle;padding:4px 9px;border:1px solid var(--accent);color:var(--accent)}
+section.phero{padding-block:clamp(34px,4.5vw,58px) 0}
+/* Was clamp(36px,7vw,84px) — at 84px a product name outweighed the homepage's
+   own h1 and wrapped to three lines. Also mirrors .row .ttl h3's flex/baseline
+   pattern so the status badge sits on the last line instead of floating
+   mid-height off vertical-align. */
+.phero h1{font-size:clamp(30px,4.6vw,54px);line-height:1.03;max-width:24ch;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.phero .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--accent);color:var(--accent);white-space:nowrap}
 .phero .tag.g{border-color:var(--rule);color:var(--muted)}
 .phero .sub{margin-top:20px;max-width:70ch;font-size:clamp(16px,1.6vw,19px);color:var(--body)}
 .fact{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-top:32px}
@@ -161,7 +200,8 @@ h1 em{font-style:italic;color:var(--accent)}
 .pull p{margin-top:0}
 .side{position:sticky;top:70px}
 @media(max-width:980px){.side{position:static}}
-.side h4{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule-fine)}
+.side h4{display:flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--rule-fine)}
+.side h4 svg{flex:none;color:var(--accent)}
 .side h4:first-child{margin-top:0}
 .side p{font-size:13.8px;color:var(--body)}
 .mm{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule)}
