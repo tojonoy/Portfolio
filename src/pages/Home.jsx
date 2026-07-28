@@ -109,7 +109,7 @@ export default function Home() {
           <a className="btn solid" href="#work">See the work <ArrowRight size={13} strokeWidth={1.9} aria-hidden="true" /></a>
           <a className="btn" href="mailto:thomasjohn3933@gmail.com"><Mail size={13} strokeWidth={1.7} aria-hidden="true" /> Email</a>
           <a className="btn" href="https://github.com/tojonoy" target="_blank" rel="noopener">GitHub <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a>
-          <a className="btn" href="https://x.com/ThomasJohn67097n" target="_blank" rel="noopener">X <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a>
+          <a className="btn" href="https://x.com/ThomasJohn67097" target="_blank" rel="noopener">X <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a>
         </div>
 
         <div className="stats">

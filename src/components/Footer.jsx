@@ -2,7 +2,7 @@ const LINKS = [
   { label: 'thomasjohn3933@gmail.com', href: 'mailto:thomasjohn3933@gmail.com', solid: true },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/thomas-john3933/' },
   { label: 'GitHub', href: 'https://github.com/tojonoy' },
-  { label: 'X', href: 'https://x.com/ThomasJohn67097n' },
+  { label: 'X', href: 'https://x.com/ThomasJohn67097' },
   { label: 'RawDiary', href: 'https://rawdiary.in' },
 ]
 
