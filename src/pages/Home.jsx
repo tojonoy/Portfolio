@@ -1,25 +1,34 @@
 import { Link } from 'react-router-dom'
-import {
-  GraduationCap, Layers, Building2,
-  Briefcase, Boxes, Terminal,
-  CodeXml, Server, BrainCircuit, MonitorSmartphone, Blocks, Database,
-  Cloud,
-  ArrowRight, Mail, ExternalLink,
-} from 'lucide-react'
+import { motion } from 'framer-motion'
+import { ArrowRight, Mail, ExternalLink } from 'lucide-react'
 import projects from '../data/projects.json'
 import portrait from '../assets/thomas.jpg'
 import Chips from '../components/Chips.jsx'
 import Section from '../components/Section.jsx'
 import useReveal from '../hooks/useReveal.js'
-import useTypewriter from '../hooks/useTypewriter.js'
+import SplitText from '../components/rb/SplitText.jsx'
+import DecryptedText from '../components/rb/DecryptedText.jsx'
+import DotGrid from '../components/rb/DotGrid.jsx'
+import CountUp from '../components/rb/CountUp.jsx'
+import Magnet from '../components/rb/Magnet.jsx'
+import { spotlightMove } from '../lib/spotlight.js'
 
-// [ink part, muted part] — typed as one string, then split back across the two
-// spans so the h1 keeps its two-tone treatment while animating.
-const PHRASES = [
-  ['I build ', 'production software'],
-  ['I love to ', 'engineer'],
-]
-const PHRASE_TEXT = PHRASES.map(([a, b]) => a + b)
+// One orchestrated entrance for the hero; MotionConfig in App.jsx downgrades
+// it automatically when the user prefers reduced motion.
+const EASE = [0.22, 1, 0.36, 1]
+const heroStagger = { show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } } }
+const rise = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+}
+// Scroll-triggered stagger for work rows and side-project cards.
+const listStagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
+const itemRise = {
+  hidden: { opacity: 0, y: 26 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+}
+const inView = { once: true, margin: '0px 0px -8% 0px' }
+const MLink = motion.create(Link)
 
 // Generic and meaningful: outcomes that describe the engineer, not one project.
 // Project-specific volumes (equities, price rows, endpoint counts per product)
@@ -31,25 +40,22 @@ const HERO_STATS = [
   { v: '4', k: 'Products shipped at work' },
 ]
 const HERO_META = [
-  { i: GraduationCap, k: 'Studied', v: 'BTech CS — Honors in AI/ML', s: 'CGPA 9.46' },
-  { i: Layers, k: 'Domains', v: 'Backend · GenAI · ML', s: 'Blockchain · automation' },
-  { i: Building2, k: 'Now', v: 'Corestrat', s: 'Bengaluru, IN' },
+  { k: 'Studied', v: 'BTech CS — Honors in AI/ML', s: 'CGPA 9.46' },
+  { k: 'Domains', v: 'Backend · GenAI · ML', s: 'Blockchain · automation' },
+  { k: 'Now', v: 'Corestrat', s: 'Bengaluru, IN' },
 ]
-const TICKER = ['Python','FastAPI','PostgreSQL','Redis','Celery','Azure','AWS','RAG','LangChain','Neo4j','Pinecone','C# .NET','React','Next.js','Docker','Go','Solidity']
-const HI = new Set(['FastAPI','Celery','RAG','C# .NET','Solidity'])
-
 // One kind of thing per row. Frameworks with frameworks, stores with stores.
 // Concepts and practices (RAG, agentic systems, microservices, REST, WebSockets,
 // CI/CD, PWAs, smart contracts) are deliberately NOT here — they aren't stack.
 // They already appear in the hero lede, the Domains cell and the ticker.
 const STACK = [
-  ['Languages', CodeXml, ['Python','C#','Go','TypeScript','JavaScript','SQL','Solidity','C']],
-  ['Backend', Server, ['FastAPI','Flask','ASP.NET','SQLAlchemy','Pydantic','Celery']],
-  ['AI & ML', BrainCircuit, ['LangChain','OpenAI','Llama 3','scikit-learn','TensorFlow']],
-  ['Databases', Database, ['PostgreSQL','MySQL','Azure SQL','Supabase','Redis','Pinecone','Neo4j']],
-  ['Frontend', MonitorSmartphone, ['React','Next.js','Streamlit']],
-  ['Blockchain', Blocks, ['Ethereum','Truffle']],
-  ['Cloud & infra', Cloud, ['Azure','AWS','Docker','Azure DevOps','Linux']],
+  ['Languages', ['Python','C#','Go','TypeScript','JavaScript','SQL','Solidity','C']],
+  ['Backend', ['FastAPI','Flask','ASP.NET','SQLAlchemy','Pydantic','Celery']],
+  ['AI & ML', ['LangChain','OpenAI','Llama 3','scikit-learn','TensorFlow']],
+  ['Databases', ['PostgreSQL','MySQL','Azure SQL','Supabase','Redis','Pinecone','Neo4j']],
+  ['Frontend', ['React','Next.js','Streamlit']],
+  ['Blockchain', ['Ethereum','Truffle']],
+  ['Cloud & infra', ['Azure','AWS','Docker','Azure DevOps','Linux']],
 ]
 
 export default function Home() {
@@ -57,99 +63,81 @@ export default function Home() {
   const side = projects.filter(p => p.group === 'side')
   useReveal([])
 
-  const { index, count, done, animating } = useTypewriter(PHRASE_TEXT)
-  const [pre, accent] = PHRASES[index]
-  const shownPre = pre.slice(0, count)
-  const shownAccent = count > pre.length ? accent.slice(0, count - pre.length) : ''
-
   return (
     <main id="top">
-      <section className="wrap hero" style={{ paddingBottom: 0 }}>
+      <motion.section className="wrap hero" style={{ paddingBottom: 0 }}
+                      variants={heroStagger} initial="hidden" animate="show">
+        <div className="hero-bg" aria-hidden="true"><DotGrid /></div>
         <div className="htop">
           <div>
-            {/* <span className="avail">
-              <i className="dot"></i>
-              <span className="kicker">Available for software, backend &amp; AI roles</span>
-            </span> */}
+            <motion.p className="kicker eyebrow" variants={rise}>
+              <DecryptedText text="Software engineer — Corestrat · Bengaluru, IN" />
+            </motion.p>
             <h1>
-              {/* Screen readers get the whole sentence once, not each keystroke. */}
-              <span className="sr-only">I build production software.</span>
-              <span aria-hidden="true">
-                {shownPre}<em>{shownAccent}</em>{done ? '.' : ''}
-                {animating ? <i className="caret" /> : null}
-              </span>
+              <span className="hl"><SplitText text="I build" delay={0.15} /></span>
+              <span className="hl"><em><SplitText text="production software." delay={0.4} /></em></span>
             </h1>
-            <p className="lede">
+            <motion.p className="lede" variants={rise}>
               Backends and data pipelines are most of my day, but the work spreads out from there —{' '}
               <b>GenAI and agentic systems, ML models, workflow automation, blockchain</b>, and the
               frontends for everything I build on my own. I like the messy parts: bad data, slow
               queries, things that fall over at 2am.
-            </p>
+            </motion.p>
           </div>
-          <figure className="portrait">
+          <motion.figure className="portrait" variants={rise}>
             <img src={portrait} alt="Thomas John" width="460" height="460"
                  decoding="async" fetchPriority="high" />
-          </figure>
+          </motion.figure>
         </div>
 
-        <div className="hmeta">
-          {HERO_META.map(({ i: Icon, ...m }) => (
+        <motion.div className="hmeta" variants={rise}>
+          {HERO_META.map(m => (
             <div key={m.k}>
-              <div className="k">
-                <Icon size={12} strokeWidth={1.75} aria-hidden="true" />
-                {m.k}
-              </div>
+              <div className="k">{m.k}</div>
               <div className="v">{m.v}</div>
               <div className="s">{m.s}</div>
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="acts">
-          <a className="btn solid" href="#work">See the work <ArrowRight size={13} strokeWidth={1.9} aria-hidden="true" /></a>
-          <a className="btn" href="mailto:thomasjohn3933@gmail.com"><Mail size={13} strokeWidth={1.7} aria-hidden="true" /> Email</a>
-          <a className="btn" href="https://github.com/tojonoy" target="_blank" rel="noopener">GitHub <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a>
-          <a className="btn" href="https://x.com/ThomasJohn67097" target="_blank" rel="noopener">X <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a>
-        </div>
+        <motion.div className="acts" variants={rise}>
+          <Magnet><a className="btn solid" href="#work">See the work <ArrowRight size={13} strokeWidth={1.9} aria-hidden="true" /></a></Magnet>
+          <Magnet><a className="btn" href="mailto:thomasjohn3933@gmail.com"><Mail size={13} strokeWidth={1.7} aria-hidden="true" /> Email</a></Magnet>
+          <Magnet><a className="btn" href="https://github.com/tojonoy" target="_blank" rel="noopener">GitHub <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a></Magnet>
+          <Magnet><a className="btn" href="https://x.com/ThomasJohn67097" target="_blank" rel="noopener">X <ExternalLink size={12} strokeWidth={1.7} aria-hidden="true" /></a></Magnet>
+        </motion.div>
 
-        <div className="stats">
+        <motion.div className="stats" variants={rise}>
           {HERO_STATS.map(s => (
-            <div key={s.k}><div className="v">{s.v}</div><div className="k">{s.k}</div></div>
+            <div key={s.k}><div className="v"><CountUp value={s.v} /></div><div className="k">{s.k}</div></div>
           ))}
-        </div>
+        </motion.div>
+      </motion.section>
 
-        {/* <div className="tick" aria-hidden="true">
-          <div className="tick-in">
-            {[0, 1].map(loop =>
-              TICKER.map(t => (
-                <span key={`${loop}-${t}`} className={HI.has(t) ? 's' : undefined}>{t}</span>
-              ))
-            )}
-          </div>
-        </div> */}
-      </section>
-
-      <Section id="work" icon={Briefcase} title="Work at Corestrat" note="Feb 2025 → now">
-        {work.map(p => (
-          <Link className="row rv" key={p.slug} to={`/work/${p.slug}`}>
-            <span className="num">{p.num}</span>
-            <span className="ttl">
-              <h3>
-                {p.name}{' '}
-                <span className={p.status === 'live' ? 'live' : 'int'}>{p.statusLabel}</span>
-              </h3>
-              <p>{p.short}</p>
-            </span>
-            <span className="tags" dangerouslySetInnerHTML={{ __html: p.tags }} />
-            <span className="arrow">→</span>
-          </Link>
-        ))}
+      <Section id="work" index="01" title="Work at Corestrat" note="Feb 2025 → now">
+        <motion.div variants={listStagger} initial="hidden" whileInView="show" viewport={inView}>
+          {work.map(p => (
+            <MLink className="row" variants={itemRise} key={p.slug} to={`/work/${p.slug}`}>
+              <span className="num">{p.num}</span>
+              <span className="ttl">
+                <h3>
+                  {p.name}{' '}
+                  <span className={p.status === 'live' ? 'live' : 'int'}>{p.statusLabel}</span>
+                </h3>
+                <p>{p.short}</p>
+              </span>
+              <span className="tags" dangerouslySetInnerHTML={{ __html: p.tags }} />
+              <span className="arrow">→</span>
+            </MLink>
+          ))}
+        </motion.div>
       </Section>
 
-      <Section id="side" icon={Boxes} title="Built on my own" note="Personal projects">
-        <div className="sg rv">
+      <Section id="side" index="02" title="Built on my own" note="Personal projects">
+        <motion.div className="sg" variants={listStagger} initial="hidden" whileInView="show" viewport={inView}>
           {side.map(p => (
-            <Link key={p.slug} to={`/work/${p.slug}`}>
+            <MLink key={p.slug} className="spot" variants={itemRise} to={`/work/${p.slug}`}
+                   onMouseMove={spotlightMove}>
               <div className="hrow">
                 <span className="kicker">{p.kicker}</span>
                 <span className="arrow">→</span>
@@ -157,21 +145,21 @@ export default function Home() {
               <h3>{p.name}</h3>
               <p>{p.short}</p>
               <Chips items={p.chips} />
-            </Link>
+            </MLink>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
-      <Section id="stack" icon={Terminal} title="Stack & background" note="In production">
+      <Section id="stack" index="03" title="Stack & background" note="In production">
         <div className="st rv">
-          {STACK.map(([label, Icon, items]) => (
+          {STACK.map(([label, items]) => (
             <div className="r2" key={label}>
-              <div className="rl"><Icon size={13} strokeWidth={1.7} aria-hidden="true" />{label}</div>
+              <div className="rl">{label}</div>
               <Chips items={items} />
             </div>
           ))}
           <div className="r2">
-            <div className="rl"><GraduationCap size={13} strokeWidth={1.7} aria-hidden="true" />Studied</div>
+            <div className="rl">Studied</div>
             <div>
               <div style={{ fontSize: '14.5px' }}>BTech Computer Science — Honors in AI/ML</div>
               <div className="mono" style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '4px' }}>

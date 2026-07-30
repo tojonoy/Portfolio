@@ -3,13 +3,15 @@ import { ChevronDown } from 'lucide-react'
 // Native <details>/<summary> rather than React state: keyboard and screen-reader
 // support come for free, it works before hydration, and Ctrl+F on a closed
 // section still finds the text in modern browsers.
-export default function Section({ id, icon: Icon, title, note, open = true, children }) {
+// `index` is the section's position in the page order — it matches the header
+// nav numbering, so the numbers carry real sequence information.
+export default function Section({ id, index, title, note, open = true, children }) {
   return (
     <section className="wrap" id={id}>
       <details className="sec" open={open}>
         <summary className="sh rv">
           <div className="sh-t">
-            {Icon ? <Icon size={17} strokeWidth={1.6} aria-hidden="true" /> : null}
+            {index ? <span className="idx">{index}</span> : null}
             <h2>{title}</h2>
           </div>
           <div className="sh-r">

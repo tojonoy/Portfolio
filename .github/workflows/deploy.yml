@@ -34,7 +34,7 @@ jobs:
       # the env block so base falls back to '/'.
       - run: npm run build
         env:
-          BASE: /Portfolio/
+          BASE: /
       # enablement: true lets the workflow turn Pages on itself, instead of
       # failing with "Get Pages site failed ... Not Found".
       - uses: actions/configure-pages@v5

@@ -1,0 +1,42 @@
+/* Tailwind v4 — utilities + theme only. Preflight is deliberately NOT imported:
+   the site's own styles.css owns the base layer, and preflight's resets would
+   fight it. Utilities exist so shadcn/21st.dev components drop in unchanged. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* The site toggles theme via html[data-theme], not prefers-color-scheme. */
+@custom-variant dark (&:where(html[data-theme="dark"], html[data-theme="dark"] *));
+
+/* Bridge shadcn-style tokens onto the site's own CSS variables so imported
+   components (bg-background, text-muted-foreground, …) follow both themes. */
+@theme inline {
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--paper);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--paper);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--ink);
+  --color-primary-foreground: var(--paper);
+  --color-secondary: var(--paper-2);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--paper-2);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--rule);
+  --color-input: var(--rule);
+  --color-ring: var(--accent);
+
+  --font-sans: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+}
